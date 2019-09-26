@@ -1,13 +1,16 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertube/blocs/favorite_bloc.dart';
 import 'package:fluttertube/blocs/videos_bloc.dart';
 import 'package:fluttertube/delegates/data_search.dart';
+import 'package:fluttertube/models/video.dart';
 import 'package:fluttertube/widgets/video_tile.dart';
 
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final bloc = BlocProvider.getBloc<VideosBloc>();
+    final blocVideos = BlocProvider.getBloc<VideosBloc>();
+    final blocFavoritos = BlocProvider.getBloc<FavoriteBloc>();
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -21,7 +24,15 @@ class Home extends StatelessWidget {
         actions: <Widget>[
           Align(
             alignment: Alignment.center,
-            child: Text("0"),
+            child: StreamBuilder<Map<String, Video>>(
+                stream: blocFavoritos.outFav,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Text('${snapshot.data.length}');
+                  } else {
+                    return Container();
+                  }
+                }),
           ),
           IconButton(
             icon: Icon(Icons.star),
@@ -33,7 +44,7 @@ class Home extends StatelessWidget {
               String result =
                   await showSearch(context: context, delegate: DataSearch());
               if (result != null) {
-                bloc.inSearch.add(result);
+                blocVideos.inSearch.add(result);
               }
             },
           )
@@ -41,7 +52,7 @@ class Home extends StatelessWidget {
       ),
       body: StreamBuilder(
         initialData: [],
-        stream: bloc.outVideos,
+        stream: blocVideos.outVideos,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
@@ -50,7 +61,7 @@ class Home extends StatelessWidget {
                   if (index < snapshot.data.length) {
                     return VideoTile(snapshot.data[index]);
                   } else if (index > 1) {
-                    bloc.inSearch.add(null);
+                    blocVideos.inSearch.add(null);
                     return Container(
                       height: 40.0,
                       width: 40.0,
