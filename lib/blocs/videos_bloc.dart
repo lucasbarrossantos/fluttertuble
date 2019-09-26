@@ -9,11 +9,9 @@ class VideosBloc implements BlocBase {
   List<Video> videos;
 
   final _videosController = StreamController<List<Video>>();
-
   Stream<List<Video>> get outVideos => _videosController.stream;
 
   final _searchController = StreamController<String>();
-
   // Para adicionar algum dado no searchController
   Sink<String> get inSearch => _searchController.sink;
 
