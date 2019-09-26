@@ -24,7 +24,12 @@ class VideosBloc implements BlocBase {
   }
 
   void _search(String search) async {
-    videos = await api.search(search);
+    if (search != null) {
+      _videosController.sink.add([]); // Para refazer a tela com a lista vazia
+      videos = await api.search(search);
+    } else {
+      videos += await api.nextPage();
+    }
     _videosController.sink.add(videos);
   }
 
