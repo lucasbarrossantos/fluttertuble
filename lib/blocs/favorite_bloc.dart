@@ -12,6 +12,7 @@ class FavoriteBloc extends BlocBase {
   final _favController = BehaviorSubject<Map<String, Video>>.seeded({});
 
   Stream<Map<String, Video>> get outFav => _favController.stream;
+  Sink<Map<String, Video>> get inFav => _favController.sink;
 
   FavoriteBloc() {
     SharedPreferences.getInstance().then((prefs) {
@@ -21,7 +22,7 @@ class FavoriteBloc extends BlocBase {
           return MapEntry(key, Video.formJson(value));
         }).cast<String, Video>();
 
-        _favController.add(_favorites);
+        inFav.add(_favorites);
       }
     });
   }
@@ -33,7 +34,7 @@ class FavoriteBloc extends BlocBase {
       _favorites[video.id] = video;
     }
 
-    _favController.sink.add(_favorites);
+    inFav.add(_favorites);
     _saveFav();
   }
 
