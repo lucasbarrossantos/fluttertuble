@@ -4,6 +4,7 @@ import 'package:fluttertube/blocs/favorite_bloc.dart';
 import 'package:fluttertube/blocs/videos_bloc.dart';
 import 'package:fluttertube/delegates/data_search.dart';
 import 'package:fluttertube/models/video.dart';
+import 'package:fluttertube/screens/favorites.dart';
 import 'package:fluttertube/widgets/video_tile.dart';
 
 class Home extends StatelessWidget {
@@ -36,7 +37,10 @@ class Home extends StatelessWidget {
           ),
           IconButton(
             icon: Icon(Icons.star),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => FavoritesScreen()));
+            },
           ),
           IconButton(
             icon: Icon(Icons.search),

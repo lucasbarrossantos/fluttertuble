@@ -15,7 +15,7 @@ class Video {
           channel: json["snippet"]["channelTitle"]);
     } else {
       return Video(
-          id: json["id"],
+          id: json["videoId"],
           title: json["title"],
           thumb: json["thumbnails"]["high"]["url"],
           channel: json["channelTitle"]);
